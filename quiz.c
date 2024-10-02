@@ -5,14 +5,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* display_usage
  *
  * Prints the brief usage details of quiz
  */
-void display_usage() {
+int display_usage() {
 	printf("Usage: quiz [-#] [<answer>]\n");
-	printf("Try 'quiz --help' for more information");
+	printf("Try 'quiz --help' for more information\n");
 	return EXIT_FAILURE;
 }
 
@@ -20,10 +21,9 @@ void display_usage() {
  *
  * Prints a detailed help guide of how to interact with quiz
  */
-void display_help(){
+int display_help(){
 	printf("Usage: quiz [-#] [<answer>]...\n"
 		"A interactive test of Linux, C, and Git questions.\n\n"
-		"With no FILE, or when FILE is -, read standard input.\n\n"
 		"  -#			display text of question #\n"	
 		"  -# [<answer>]        display feedback of answer to question #\n"
 		"  --help     		display this help and exit\n\n"
@@ -33,26 +33,67 @@ void display_help(){
 	return EXIT_SUCCESS;
 }
 
-//void check_answer(
+/* display_question
+ *
+ * Prints the question corresponding to the inputted number.
+ */
+int display_question(int num){
+	if(num == 1){
+		printf("What command is used to find the working directory in Linux?\n");
+	}
+	else if(num == 2){
+		printf("What parameter is the number of command line arguments called?\n");
+	}
+	else{
+		printf("True or False. The commit message is optional.\n");
+	}
 
-int main(nt argc, char *argv[]) {
+	return EXIT_SUCCESS;	
+}
+
+/* check_answer
+ *
+ * Checks if the inputted answer is the correct answer to the corresponding question number.                               
+ */
+int check_answer(int num, char* answer){
+	if(num == 1 && strcmp(answer, "pwd") != 0){
+                printf("Wrong! The correct answer is 'pwd'.\n");
+        }
+        else if(num == 2 && strcmp(answer, "argc") != 0){
+                printf("Wrong! The correct answer is 'argc'\n");
+        }
+        else if(num == 2 && strcmp(answer, "False") != 0){
+                printf("Wrong! The correct answer is 'False'.\n");
+        }
+	else{
+		printf("Correct! Good job.\n");
+	}
+
+        return EXIT_SUCCESS;
+}
+
+int main(int argc, char *argv[]) {
 	if(argc == 1){
 		display_usage();
 	}
 	
-	else if(strcmp(argv[1], "--help")){
+	else if(strcmp(argv[1], "--help")==0){
 		display_help();
 	}
 
-//	char question_num[10]
-//	while(true){
-//
-//		int result = scanf("%s", question_num);
-//		if(result == 0){
-//			fprintf(stderr, "Incorrect Value\n");
-//			display_usage();
-//		}
+	else if(argv[1][0] == '-' && (argv[1][1] == '1'|argv[1][1] == '2'|argv[1][1] == '3')){
+                int question_num = argv[1][1] - '0'; // converting num to int
+		if(argc == 2){
+			display_question(question_num);
+		}
+		else{
+			check_answer(question_num, argv[2]);
+		}
+        }
+
+	else{
+		display_usage();
+	}
 	
-	puts("Hello, World!");
 	return EXIT_SUCCESS;
 }
